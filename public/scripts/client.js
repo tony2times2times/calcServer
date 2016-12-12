@@ -2,20 +2,20 @@
 var debug = true;
 
 $(document).ready(function() {
-  if (debug) {
-      console.log("Document is ready");
-  }
+    if (debug) {
+        console.log("Document is ready");
+    }
     enable();
 });
 
 //enable event listeners
 function enable() {
     $('#calculate').on('click', gather);
-    $("#calc-input").keyup(function(event){
-    if(event.keyCode == 13){
-        $("#calculate").click();
-    }
-});
+    $("#calc-input").keyup(function(event) {
+        if (event.keyCode == 13) {
+            $("#calculate").click();
+        }
+    });
 }
 
 function gather() {
@@ -29,14 +29,25 @@ function gather() {
     $('#calc-input').val('');
     //sanitize user input to erase all spaces
     problem = problem.replace(/\s*\s*/g, '');
-    if(debug){console.log('This should have no spaces: ' + problem);}
-    var opperator = problem.match(regex)[0];
     if (debug) {
-        console.log(opperator);
+        console.log('This should have no spaces: ' + problem);
     }
+    var opperator = problem.match(regex);
+    //check to see if an opperator was used
+    if(opperator === null){
+      $('#instructions').show();
+      alert("Please enter a valid math equation. Using one of the following opperators: + - * x /");
+      return;
+    }
+    opperator = opperator[0];
     var numbers = problem.split(regex);
     if (debug) {
         console.log("numbers: " + numbers);
+    }
+    if(numbers.length != 2){
+      $('#instructions').show();
+      alert("Please only enter a single math problem at a time.");
+      return;
     }
     //redefine problem as an object before POSTing to the server
     problem = {
@@ -61,7 +72,10 @@ function postCalculator(problem) {
         }
     });
 }
-function displaySolution(problem){
-  solution = problem['numbers[]'][0]+problem.opperator+problem['numbers[]'][1]+" = "+problem.solution+'<br>';
-  $('#solution').append(solution);
+
+function displaySolution(problem) {
+    var x = problem['numbers[]'][0];
+    var y = problem['numbers[]'][1];
+    solution = " = " + problem.solution + '<br>';
+    $('#solution').append(x + problem.opperator + y + solution);
 }

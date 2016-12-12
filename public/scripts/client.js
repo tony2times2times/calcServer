@@ -22,11 +22,14 @@ function gather() {
     //hide instructions after user inputs data
     $('#instructions').hide();
     //use regular expressions to seperate opperator from numbers
-    var regex = /\s*[\*||\/|| \- || \+]\s*/;
+    var regex = /\s*[\*||\/|| \- || \+ || 'x']\s*/;
     //get user input
     var problem = $('#calc-input').val();
-    //reselt input to empty string
+    //reset input to empty string
     $('#calc-input').val('');
+    //sanitize user input to erase all spaces
+    problem = problem.replace(/\s*\s*/g, '');
+    if(debug){console.log('This should have no spaces: ' + problem);}
     var opperator = problem.match(regex)[0];
     if (debug) {
         console.log(opperator);
